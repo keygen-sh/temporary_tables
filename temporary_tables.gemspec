@@ -7,8 +7,8 @@ Gem::Specification.new do |spec|
   spec.version     = TemporaryTables::VERSION
   spec.authors     = ['Zeke Gabrielse']
   spec.email       = ['oss@keygen.sh']
-  spec.summary     = 'Performant count estimates for Rails and PostgreSQL.'
-  spec.description = 'Performant count estimates for Rails and PostgreSQL.'
+  spec.summary     = 'Create temporary tables for Rspec tests.'
+  spec.description = 'Create temporary tables for Rspec tests.'
   spec.homepage    = 'https://github.com/keygen-sh/temporary_tables'
   spec.license     = 'MIT'
 
