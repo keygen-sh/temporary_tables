@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module TemporaryTables
-  VERSION = '0.0.3'
+  VERSION = '1.0.0-rc.1'
 end
