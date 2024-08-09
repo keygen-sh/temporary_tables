@@ -49,6 +49,28 @@ RSpec.describe TemporaryTables do
       after :all do
         expect('TmpRecord'.safe_constantize).to be nil
       end
+
+      describe 'STI' do
+        temporary_model :tmp_record_2, table_name: :tmp_records, base_class: 'TmpRecord'
+
+        before :all do
+          expect('TmpRecord2'.safe_constantize).to be nil
+        end
+
+        it 'creates a temporary STI active record' do
+          expect(klass = 'TmpRecord2'.safe_constantize).to_not be nil
+          expect(klass.table_name).to eq 'tmp_records'
+          expect(klass.name).to eq 'TmpRecord2'
+          expect(record = klass.create).to be_an ActiveRecord::Base
+          expect(record.id).to be_an Integer
+          expect(instance = klass.new(name: 'test')).to be_an ActiveRecord::Base
+          expect(instance.name).to eq 'test'
+        end
+
+        after :all do
+          expect('TmpRecord2'.safe_constantize).to be nil
+        end
+      end
     end
 
     describe 'ActiveModel' do

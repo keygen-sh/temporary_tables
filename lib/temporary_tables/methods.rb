@@ -25,10 +25,11 @@ module TemporaryTables
         class_name = name.to_s.classify
 
         before do |example|
-          klass = Class.new *base_class do
-                    define_singleton_method(:table_name) { table_name } unless table_name.nil?
-                    define_singleton_method(:name)       { class_name }
-                  end
+          base_class = base_class.to_s.constantize if base_class in String | Symbol
+          klass      = Class.new *base_class do
+                         define_singleton_method(:table_name) { table_name.to_s } unless table_name.nil?
+                         define_singleton_method(:name)       { class_name }
+                       end
 
           unless extension.nil?
             # pass in an example context so that vars can be accessed
