@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "lib/temporary_tables/version"
+require_relative 'lib/temporary_tables/version'
 
 Gem::Specification.new do |spec|
   spec.name        = 'temporary_tables'
@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.files                 = %w[LICENSE CHANGELOG.md CONTRIBUTING.md SECURITY.md README.md] + Dir.glob('lib/**/*')
   spec.require_paths         = ['lib']
 
-  spec.add_dependency 'rails', '>= 6.0'
+  spec.add_dependency 'activerecord', '>= 6.0'
 
-  spec.add_development_dependency 'rspec-rails'
+  spec.add_development_dependency 'sqlite3', '~> 1.4'
 end
