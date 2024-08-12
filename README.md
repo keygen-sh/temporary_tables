@@ -47,7 +47,7 @@ To define a temporary table:
 
 ```ruby
 describe Example do
-  temporary_table :user do |t|
+  temporary_table :users do |t|
     t.string :email
     t.string :first_name
     t.string :last_name
@@ -55,7 +55,7 @@ describe Example do
   end
 
   it 'should define a table' do
-    expect(ActiveRecord::Base.connection.table_exists?(:user)).to be true
+    expect(ActiveRecord::Base.connection.table_exists?(:users)).to be true
   end
 end
 ```
