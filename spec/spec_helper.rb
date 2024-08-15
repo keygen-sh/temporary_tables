@@ -2,11 +2,10 @@
 
 require 'temporary_tables'
 require 'active_record'
-require 'sqlite3'
 
+ActiveRecord::Base.logger = Logger.new(STDOUT) if ENV.key?('DEBUG')
 ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: ':memory:',
+  ENV.fetch('DATABASE_URL') { 'sqlite3::memory:' },
 )
 
 RSpec.configure do |config|

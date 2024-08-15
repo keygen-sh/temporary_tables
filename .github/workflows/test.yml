@@ -6,15 +6,39 @@ on:
   pull_request:
     branches:
       - master
+concurrency:
+  group: ${{github.workflow}}-${{github.event.pull_request.number || github.ref}}
+  cancel-in-progress: true
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby:
-          - '3.3'
-          - '3.2'
-          - '3.1'
+        ruby: ['3.3', '3.2', '3.1']
+        database: ['sqlite', 'postgres', 'mysql', 'mariadb']
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test
+      mariadb:
+        image: 'mariadb:11'
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: test
+        ports:
+          - 3307:3306 # avoid conflict w/ mysql
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,5 +47,21 @@ jobs:
         with:
           ruby-version: ${{matrix.ruby}}
           bundler-cache: true
+      - name: Setup database
+        run: |
+          case ${{matrix.database}} in
+          sqlite)
+            echo "DATABASE_URL=sqlite3::memory:" >> $GITHUB_ENV
+            ;;
+          postgres)
+            echo "DATABASE_URL=postgres://postgres:postgres@localhost/test" >> $GITHUB_ENV
+            ;;
+          mysql)
+            echo "DATABASE_URL=mysql2://root:root@127.0.0.1/test" >> $GITHUB_ENV
+            ;;
+          mariadb)
+            echo "DATABASE_URL=mysql2://root:root@127.0.0.1:3307/test" >> $GITHUB_ENV
+            ;;
+          esac
       - name: Test
         run: bundle exec rake test
